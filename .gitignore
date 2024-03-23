@@ -1,0 +1,7 @@
+.DS_Store
+.idea/
+
+zig-cache/
+zls/
+build.zig
+zig-out/
