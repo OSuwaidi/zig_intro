@@ -2,6 +2,5 @@
 .idea/
 
 zig-cache/
-zls/
 build.zig
 zig-out/
