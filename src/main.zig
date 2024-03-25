@@ -95,7 +95,7 @@ pub fn main() !void {
     pass_by_value_manipulation(var1, var2);
     print("After first function, values of var1 and var2 are still: {}, {}\n", .{ var1, var2 });
 
-    pass_by_reference_manipulation(&var1, &var2);
+    pass_by_reference_manipulation(&var1, &var2); // pass the variables' memory addresses rather than their values!
     print("After second function, values of var1 and var2 are now: {d}, {d}\n\n", .{ var1, var2 });
 }
 
