@@ -75,5 +75,11 @@ pub fn main() !void {
         print("error 1\nvalue: {!}\ntype: {}\n\n", .{number_of_error, @TypeOf(number_of_error)});
 
         number_of_error = 1234;
-        print("error 2\nvalue: {!}\ntype: {}\n", .{number_of_error, @TypeOf(number_of_error)});
+        print("error 2\nvalue: {!}\ntype: {}\n\n", .{number_of_error, @TypeOf(number_of_error)});
+
+        // pointers:
+        var some_int: i32 = 100;
+        const ptr = &some_int;  // type "*i32"
+        print("The address of some_int in memory is: {}\nwith pointer pointing to value: {}\n", .{ptr, ptr.*}); // dereference the pointer
+
     }
