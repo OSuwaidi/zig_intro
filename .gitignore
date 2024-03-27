@@ -1,6 +1,12 @@
+# Environment related stuff:
 .DS_Store
 .idea/
 
-zig-cache/
+# Zig related stuff:
 build.zig
+zig-cache/
 zig-out/
+# Ignore everything in the zilglings directory:
+ziglings.org/
+# But do not ignore the "exercises" sub-folder:
+!ziglings.org/exercises
