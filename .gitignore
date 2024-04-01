@@ -10,3 +10,4 @@ zig-out/
 ziglings.org/
 # But do not ignore the "exercises" sub-folder:
 !ziglings.org/exercises
+test*.zig
