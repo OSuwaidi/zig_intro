@@ -13,6 +13,7 @@ const stdout = std.io.getStdOut().writer();
 const assert = @import("std").debug.assert;
 
 // "export" makes the function accessible from outside the compiled binary (with C linkage)
+// To import a Zig function from Python or C run: "zig build-lib file_name.zig -dynamic -O ReleaseFast -femit-bin=file_name.so"
 export fn add(a: i32, b: i32) i32 {
     return a + b;
 }
