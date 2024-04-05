@@ -76,7 +76,7 @@ pub fn main() !void {
     optional_var = "hi";
     assert(optional_var != null);
     // ".?" is the *unpacking* operator which unpacks an optional type and will panic if the unpacked value is null!
-    print("optional_var 2 holds: {?s}\nand is of type: {}, but type {} when unpacked.\n\n", .{ optional_var, @TypeOf(optional_var) , @TypeOf(optional_var.?)});
+    print("optional_var 2 holds: {?s}\nand is of type: {}, but type {} when unpacked.\n\n", .{ optional_var, @TypeOf(optional_var), @TypeOf(optional_var.?) });
 
     // error union:
     var number_of_error: anyerror!i32 = error.ArgNotFound;
