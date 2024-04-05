@@ -1,12 +1,13 @@
 // بسم الله الرحمن الرحيم وبه نستعين
 
-// All *statements* in Zig must end with a semicolon ";"
+// All *statements* in Zig must end with a semicolon ";"!
+// Variables in Zig are snake_case, while functions are camelCase (the first letter of every word after the first word is capitalized)
 
-// "{ }" are called block scopes that define the scope of a function, method, etc.
+// "{ }" are called block scopes that define the scope of a function, method, struct, etc.
 
 // Top-level declarations are order-independent:
 const os = std.os;
-const std = @import("std"); // import zig's standard library
+const std = @import("std"); // import Zig's standard library
 const print = std.debug.print;
 const stdout = std.io.getStdOut().writer();
 const assert = @import("std").debug.assert;
@@ -28,8 +29,8 @@ pub fn main() !void {
     std.debug.print("Hello world!\n", .{}); // ".{ }" is used to pass the arguments as a tuple
     print("Quick print!\n", .{}); // the more recommended way most of the time
 
-    // because the functions below might return an error, we had to modify the "main" function to return "!void" rather than "void"
-    try stdout.print("Try Hello, {s}!\n", .{"world"});
+    // because the functions below might return an error (error union), we had to modify the "main" function to return "!void" rather than "void"
+    try stdout.print("Try Hello, {s}!\n", .{"world"}); // "try" is similar to Rust's "unwrap" but for extracting a possible *error* outcome
     stdout.print("Catch Hello, {s}!\n\n", .{"world"}) catch {};
 
     // Defining varibles:
@@ -67,13 +68,14 @@ pub fn main() !void {
     print("byte_array is now: {s}\n\n", .{byte_array});
 
     // optional:
-    var optional_var: ?[]const u8 = null; // prefixing the data type with a "?" implies it's an optional value
+    var optional_var: ?[]const u8 = null; // prefixing the data type with a "?" implies it's an optional value (type union null)
     assert(optional_var == null);
     print("optional_var 1 holds: {any}\nand is of type: {}\n\n", .{ optional_var, @TypeOf(optional_var) });
 
     optional_var = "hi";
     assert(optional_var != null);
-    print("optional_var 2 holds: {?s}\nand is of type: {}\n\n", .{ optional_var, @TypeOf(optional_var) });
+    // ".?" is the *unpacking* operator which unpacks an optional type and will panic if the unpacked value is null!
+    print("optional_var 2 holds: {?s}\nand is of type: {}, but type {} when unpacked.\n\n", .{ optional_var, @TypeOf(optional_var) , @TypeOf(optional_var.?)});
 
     // error union:
     var number_of_error: anyerror!i32 = error.ArgNotFound;
@@ -92,15 +94,15 @@ pub fn main() !void {
     var float2: f32 = 0;
     print("Original values of float1 and float2 are: {d}, {d}\nwith their stored addresses at: {}, {}.\n\n", .{ float1, float2, &float1, &float2 });
 
-    pass_by_value_manipulation(float1, float2);
-    print("After first function, values of float1 and float2 are still: {d}, {d}\n\n", .{ float1, float2 });
+    passByValueManip(float1, float2);
+    print("After first function, values of float1 and float2 are still: {d}, {d}.\n\n", .{ float1, float2 });
 
-    pass_by_reference_manipulation(&float1, &float2); // pass the variables' memory addresses rather than their values!
-    print("After second function, values of float1 and float2 are now: {d}, {d}\n", .{ float1, float2 });
+    passByReferenceManip(&float1, &float2); // pass the variables' memory addresses rather than their values!
+    print("After second function, values of float1 and float2 are now: {d}, {d}.\n", .{ float1, float2 });
 }
 
 // By default, arguments are passed by into functions by *value*, meaning a *copy* of each argument is created when it's passed into a function
-fn pass_by_value_manipulation(x: f32, y: f32) void {
+fn passByValueManip(x: f32, y: f32) void {
     print("Addresses of x (float1) and y (float2) are: {}, and {}, respectively.\nNotice that the addresses are different than the original variables because they're a copy!\n", .{ &x, &y });
     // In Zig a function's arguments are immutable by default, hence you cannot directly modify their values (unlike in C)!
     // a += 20;  -> error: cannot assign to constant
@@ -108,10 +110,10 @@ fn pass_by_value_manipulation(x: f32, y: f32) void {
     // _ = a + b; // must use the function's arguments
 }
 
-fn pass_by_reference_manipulation(x: *f32, y: *f32) void {
+fn passByReferenceManip(x: *f32, y: *f32) void {
     print("Addresses of x (float1) and y (float2) are: {}, and {}, respectively.\nNotice that now since we're using pointers, they're the same addresses as the original varaibles!\n", .{ x, y });
     // Access the variables' original value in memory by dereferencing the pointers pointing to their address in memory
     x.* = 99;
     y.* = 10;
-    return undefined; // "undefined" is the same as "void", but "null" is a value, it represents the *absence* of a value!
+    return undefined; // "undefined" is the same as "void", but "null" is a value representing the *absence* of a value!
 }

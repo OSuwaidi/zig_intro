@@ -4,8 +4,7 @@
 
 # Zig related stuff:
 build.zig
-zig-cache/
-zig-out/
+zig-*
 # Ignore everything in the zilglings directory:
 ziglings.org/
 # But do not ignore the "exercises" sub-folder:
