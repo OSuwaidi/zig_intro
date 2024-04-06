@@ -61,11 +61,11 @@ pub fn main() !void {
 
     //characters:
     const some_char = 'A'; // of type u8 (a byte)
-    print("some_char is: {}\n", .{some_char}); // by default, it prints its Unicode encoding (65 in this case)
-    print("some_char is now: {c}\n", .{some_char});
+    print("some_char without any format specifier: {}\n", .{some_char}); // by default, it prints its Unicode encoding (65 in this case)
+    print("some_char with \"u\" format specifier: {u}\n\n", .{some_char}); // "u" is for unicode character while "c" is for ASCII character
 
-    var byte_array: [3]u8 = .{ 'h', 'e', 'y' }; // initialize a mutable array of three, single byte (8-bit) characters
-    byte_array[0] = 'x';
+    var byte_array = [_]u8{ 'h', 'e', 'y' }; // initialize a mutable array of three (inferred), single byte (8-bit) characters
+    byte_array[0] = 'w';
     print("byte_array is now: {s}\n\n", .{byte_array});
 
     // optional:
