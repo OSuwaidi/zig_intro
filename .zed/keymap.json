@@ -1,0 +1,31 @@
+[
+  {
+    "context": "Editor",
+    "bindings": {
+      "cmd-g": "editor::ToggleGitBlame",
+      "cmd-up": "editor::MoveToStartOfParagraph",
+      "cmd-shift-up": "editor::SelectToStartOfParagraph",
+      "cmd-down": "editor::MoveToEndOfParagraph",
+      "cmd-shift-down": "editor::SelectToEndOfParagraph",
+      "cmd-enter": "editor::ToggleCodeActions",
+      "cmd-shift-f": "editor::Format"
+    }
+  },
+
+  {
+    "context": "Editor && mode == full",
+    "bindings": {
+      "shift-enter": "editor::NewlineBelow"
+    }
+  },
+
+  {
+    "context": "Workspace",
+    "bindings": {
+      "shift-f": "file_finder::Toggle",
+      "cmd-t": "workspace::ToggleBottomDock",
+      "cmd-p": "command_palette::Toggle",
+      "cmd-k": "zed::OpenKeymap"
+    }
+  }
+]
