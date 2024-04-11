@@ -1,7 +1,11 @@
 // بسم الله الرحمن الرحيم وبه نستعين
 
 // All *statements* in Zig must end with a semicolon ";"!
-// Variables in Zig are snake_case, while functions are camelCase (the first letter of every word after the first word is capitalized)
+
+// Naming convention in Zig:
+// Variables and constants are snake_case
+// Functions and methods are camelCase (the first letter of every word after the first word is capitalized)
+// Types, structs, and functions that return a type or struct are PascalCase
 
 // "{ }" are called block scopes that define the scope of a function, method, struct, etc.
 
@@ -34,7 +38,7 @@ pub fn main() !void {
     try stdout.print("Try Hello, {s}!\n", .{"world"}); // "try" is similar to Rust's "unwrap" but for extracting a possible *error* outcome
     stdout.print("Catch Hello, {s}!\n\n", .{"world"}) catch {};
 
-    // Defining varibles:
+    // Defining varibles
     // constant numerics:
     const x: i32 = 1;
     const y: f32 = 5.0;
@@ -55,7 +59,7 @@ pub fn main() !void {
     print("and operation = {}\nor operation = {}\n\n", .{ not_true and is_true, not_true or is_true });
 
     // strings:
-    const fixed_str = "Hello World"; // "*const [11:0]u8" ==> a pointer to a constant, *fixed* array of bytes
+    const fixed_str = "Hello World"; // returns a pointer to a constant: "*const [11:0]u8", *fixed* array of bytes
     const grow_str: []const u8 = "Hello Variable"; // a slice; a view into a section of an array, here, it's a string of *variable* length
     print("The fixed size fixed_str is: {s}\nand the variable size var_str is: {s}\n\n", .{ fixed_str, grow_str });
 
@@ -64,7 +68,7 @@ pub fn main() !void {
     print("some_char without any format specifier: {}\n", .{some_char}); // by default, it prints its Unicode encoding (65 in this case)
     print("some_char with \"u\" format specifier: {u}\n\n", .{some_char}); // "u" is for unicode character while "c" is for ASCII character
 
-    var byte_array = [_]u8{ 'h', 'e', 'y' }; // initialize a mutable array of three (inferred), single byte (8-bit) characters
+    var byte_array = [_]u8{ 'h', 'e', 'y' }; // initialize a mutable array of three (inferred), single byte (8-bit) characters: "[3]u8"
     byte_array[0] = 'w';
     print("byte_array is now: {s}\n\n", .{byte_array});
 
@@ -87,8 +91,8 @@ pub fn main() !void {
 
     // pointers:
     var some_int: i32 = 100;
-    const ptr = &some_int; // return the address of the variable which in this case is of type "*i32"
-    print("The address of some_int in memory is: {},\nwith the pointer pointing to the value: {}\n\n", .{ ptr, ptr.* }); // dereference the pointer via ".*"
+    const ptr = &some_int; // returns the address of the variable which in this case is of type "*i32"
+    print("The address of some_int in memory is: {*},\nwith the pointer pointing to the value: {}\n\n", .{ ptr, ptr.* }); // dereference the pointer via ".*"
 
     // What's the point (use) of pointers?
     var float1: f32 = 0;
@@ -100,12 +104,51 @@ pub fn main() !void {
 
     passByReferenceManip(&float1, &float2); // pass the variables' memory addresses rather than their values!
     print("After second function, values of float1 and float2 are now: {d}, {d}.\n", .{ float1, float2 });
+
+    // "for" loops:
+    var numbers = [_]u8{ 1, 2, 3 };
+
+    // Capture elements by value (copy):
+    for (numbers) |n| { // variable "n" is called the "captured" value
+        _ = n; // "n: u8" here is a created copy of each element in "numbers"
+    }
+
+    // Capture elements by "read-only" reference:
+    for (&numbers) |n| {
+        _ = n; // "n: u8" here is a *copied* accessed (read) value (dereferenced pointer) of each element in "numbers"
+    }
+
+    // Capture elements by "write" reference:
+    for (&numbers) |*n| {
+        _ = n; // "n: *u8" here is a pointer capture value of each element in "numbers" that can be dereferenced via "n.*"
+    }
+
+    // Invalid:
+    // for (numbers) |*n| {
+    //     // error: pointer capture of non pointer type
+    // }
+
+    // ***Note***
+    // Variables defined within a block of code only live (exist) within that block of code!
+    // example 1:
+    if (true) {
+        const fish = "salmon";
+        _ = fish; // variable must be used somehow...
+    }
+    // print("where is fish: {}\n", .{fish}); -->  error: use of undeclared identifier 'fish'
+
+    // example 2:
+    for (0..3) |_| {
+        const fish = "salmon";
+        _ = fish;
+    }
+    // print("where is fish: {}\n", .{fish}); -->  error: use of undeclared identifier 'fish'
 }
 
 // By default, arguments are passed by into functions by *value*, meaning a *copy* of each argument is created when it's passed into a function
 fn passByValueManip(x: f32, y: f32) void {
     print("Addresses of x (float1) and y (float2) are: {}, and {}, respectively.\nNotice that the addresses are different than the original variables because they're a copy!\n", .{ &x, &y });
-    // In Zig a function's arguments are immutable by default, hence you cannot directly modify their values (unlike in C)!
+    // In Zig, function arguments are immutable by default, hence you cannot directly modify their values (unlike in C)!
     // a += 20;  -> error: cannot assign to constant
     // b = 10;  --> error: cannot assign to constant
     // _ = a + b; // must use the function's arguments
@@ -116,5 +159,5 @@ fn passByReferenceManip(x: *f32, y: *f32) void {
     // Access the variables' original value in memory by dereferencing the pointers pointing to their address in memory
     x.* = 99;
     y.* = 10;
-    return undefined; // "undefined" is the same as "void", but "null" is a value representing the *absence* of a value!
+    return undefined; // "undefined" is the same as "void", whereas "null" is a value representing the *absence* of a value!
 }
