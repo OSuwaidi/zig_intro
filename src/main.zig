@@ -60,7 +60,7 @@ pub fn main() !void {
 
     // strings:
     const fixed_str = "Hello World"; // returns a pointer to a constant: "*const [11:0]u8", *fixed* array of bytes
-    const grow_str: []const u8 = "Hello Variable"; // a slice; a view into a section of an array, here, it's a string of *variable* length
+    const grow_str: []const u8 = "Hello Variable"; // a slice; a view (pointer) into a section of an array, here, it's a string of *variable* length
     print("The fixed size fixed_str is: {s}\nand the variable size var_str is: {s}\n\n", .{ fixed_str, grow_str });
 
     //characters:
@@ -113,7 +113,7 @@ pub fn main() !void {
         _ = n; // "n: u8" here is a created copy of each element in "numbers"
     }
 
-    // Capture elements by "read-only" reference:
+    // Capture elements by copied "read-only" reference (pratically same as the above, just there for convenience):
     for (&numbers) |n| {
         _ = n; // "n: u8" here is a *copied* accessed (read) value (dereferenced pointer) of each element in "numbers"
     }
