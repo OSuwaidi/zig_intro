@@ -8,12 +8,51 @@
 // from the command palette or from `Zed` application menu.
 {
   "theme": "Atelier Cave Dark",
+  "ui_font_size": 16,
+  "buffer_font_size": 13.5,
+  "preferred_line_length": 175,
+  "base_keymap": "VSCode",
+  "extend_comment_on_newline": false,
+  "confirm_quit": true,
+  "autosave": "on_focus_change",
+  "show_copilot_suggestions": false,
+  "gutter": {
+    // Whether to show code action buttons in the gutter.
+    "code_actions": false,
+    // Whether to show fold buttons in the gutter.
+    "folds": true
+  },
+  "inlay_hints": {
+    // Global switch to toggle hints on and off, switched off by default.
+    "enabled": true,
+    // Toggle certain types of hints on and off, all switched on by default.
+    "show_type_hints": true,
+    "show_parameter_hints": true,
+    // Corresponds to null/None LSP hint type value.
+    "show_other_hints": true
+  },
+  "toolbar": {
+    // Whether to show breadcrumbs.
+    "breadcrumbs": true,
+    // Whether to show quick action buttons.
+    "quick_actions": true
+  },
   "collaboration_panel": {
-    "dock": "left"
+    "button": false
   },
   "chat_panel": {
-    "dock": "right"
+    "button": false
   },
-  "ui_font_size": 16,
-  "buffer_font_size": 13.5
+  "assistant": {
+    // Whether to show the assistant panel button in the status bar.
+    "button": false
+  },
+  "features": {
+    // Show Copilot icon in status bar
+    "copilot": false
+  },
+  "tabs": {
+    // Show git status colors in the editor tabs.
+    "git_status": true
+  }
 }

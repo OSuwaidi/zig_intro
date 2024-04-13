@@ -8,7 +8,8 @@
       "cmd-down": "editor::MoveToEndOfParagraph",
       "cmd-shift-down": "editor::SelectToEndOfParagraph",
       "cmd-enter": "editor::ToggleCodeActions",
-      "cmd-shift-f": "editor::Format"
+      "cmd-shift-f": "editor::Format",
+      "cmd-r": "editor::Rename"
     }
   },
 
@@ -18,7 +19,11 @@
       "shift-enter": "editor::NewlineBelow"
     }
   },
-
+  {
+    "bindings": {
+      "alt-enter": "editor::ToggleInlayHints"
+    }
+  },
   {
     "context": "Workspace",
     "bindings": {
