@@ -9,7 +9,8 @@
       "cmd-shift-down": "editor::SelectToEndOfParagraph",
       "cmd-enter": "editor::ToggleCodeActions",
       "cmd-shift-f": "editor::Format",
-      "cmd-r": "editor::Rename"
+      "cmd-r": "editor::Rename",
+      "cmd-d": "editor::FindAllReferences"
     }
   },
 
