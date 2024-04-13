@@ -17,15 +17,11 @@ pub fn main() void {
 
     // What kind of loop is this? A 'for' or a 'while'?
     while (i <= stop_at) : (i += 1) {
-        if (i % 3 == 0 and i % 5 == 0) {
-            std.debug.print("FizzBuzz", .{});
-        } else if (i % 3 == 0) {
-            std.debug.print("Fizz", .{});
-        } else if (i % 5 == 0) {
-            std.debug.print("Buzz", .{});
-        } else if (!(i % 3 == 0) and !(i % 5 == 0)) {
-            std.debug.print("{}", .{i});
-        }
+        if (i % 3 == 0 and i % 5 == 0) std.debug.print("FizzBuzz", .{})
+        else if (i % 3 == 0) std.debug.print("Fizz", .{})
+        else if (i % 5 == 0) std.debug.print("Buzz", .{})
+        else if (!(i % 3 == 0) and !(i % 5 == 0)) std.debug.print("{}", .{i});
+
         std.debug.print(", ", .{});
     }
     std.debug.print("\n", .{});

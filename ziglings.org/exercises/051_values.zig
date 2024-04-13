@@ -12,8 +12,8 @@
 //
 // @import() adds the imported code to your own. In this case, code
 // from the standard library is added to your program and compiled
-// with it. All of this will be loaded into RAM when it runs. Oh, and
-// that thing we name "const std"? That's a struct!
+// with it (*statically linked*). All of this will be loaded into RAM when it runs.
+// Oh, and that thing we name "const std"? That's a struct!
 //
 const std = @import("std");
 
@@ -57,7 +57,7 @@ var global_wizard = Character{};
 // loaded into the beating heart of the CPU itself in registers.
 //
 // Our main() function here has no input parameters, but it will have
-// a stack entry (called a "frame").
+// a stack entry (called a "stack frame").
 
 pub fn main() void {
 
@@ -73,7 +73,7 @@ pub fn main() void {
     // value, so even though it is local, it can be put in global
     // data and shared between all invocations. But being such a
     // small value, it may also simply be inlined as a literal
-    // value in your instruction code where it is used.  It's up
+    // value in your instruction code where it is used. It's up
     // to the compiler.
 
     const reward_xp: u32 = 200;
@@ -87,12 +87,12 @@ pub fn main() void {
     // Let's assign the std.debug.print function to a const named
     // "print" so that we can use this new name later!
 
-    const print = ???;
+    const print = std.debug.print;
 
     // Now let's look at assigning and pointing to values in Zig.
     //
-    // We'll try three different ways of making a new name to access
-    // our glorp Character and change one of its values.
+    // We'll try three different ways of making a new name (variable)
+    // to access our glorp Character and change one of its values.
     //
     // "glorp_access1" is incorrectly named! We asked Zig to set aside
     // memory for another Character struct. So when we assign glorp to
@@ -103,7 +103,7 @@ pub fn main() void {
     // your program's output for this one compared to the other two
     // assignments below!
 
-    var glorp_access1: Character = glorp;
+    var glorp_access1: Character = glorp; // creates a clone; same values (content) but different address in memory (different pointer)
     glorp_access1.gold = 111;
     print("1:{}!. ", .{glorp.gold == glorp_access1.gold});
 
@@ -163,14 +163,14 @@ pub fn main() void {
     print("XP before:{}, ", .{glorp.experience});
 
     // Fix 1 of 2 goes here:
-    levelUp(glorp, reward_xp);
+    levelUp(&glorp, reward_xp);
 
     print("after:{}.\n", .{glorp.experience});
 }
 
 // Fix 2 of 2 goes here:
-fn levelUp(character_access: Character, xp: u32) void {
-    character_access.experience += xp;
+fn levelUp(character_access: *Character, xp: u32) void {
+    character_access.experience += xp; // implicitly (automatically) dereferences the struct's field
 }
 
 // And there's more!
@@ -187,8 +187,8 @@ fn levelUp(character_access: Character, xp: u32) void {
 // limitations, of course), but it's much less efficient to manage
 // because there is no built-in CPU support for adding and removing
 // items as we have with the stack. Also, depending on the type of
-// allocation, your program MAY have to do expensive work to manage
-// the use of heap memory. We'll learn about heap allocators later.
+// allocation, your program MAY have to do expensive work (e.g. syscall) to
+// manage the use of heap memory. We'll learn about heap allocators later.
 //
 // Whew! This has been a lot of information. You'll be pleased to know
 // that the next exercise gets us back to learning Zig language

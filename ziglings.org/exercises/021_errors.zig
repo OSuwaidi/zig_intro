@@ -8,8 +8,8 @@
 // We have the start of an error set, but we're missing the condition
 // "TooSmall". Please add it where needed!
 const MyNumberError = error{
-    TooBig,
-    ???,
+    TooBig, // they can be any names
+    TooSmall,
     TooFour,
 };
 
@@ -21,15 +21,15 @@ pub fn main() void {
     for (nums) |n| {
         std.debug.print("{}", .{n});
 
-        const number_error = numberFail(n);
+        const number_error: MyNumberError = numberFail(n);
 
         if (number_error == MyNumberError.TooBig) {
             std.debug.print(">4. ", .{});
         }
-        if (???) {
+        else if (number_error == MyNumberError.TooSmall) {
             std.debug.print("<4. ", .{});
         }
-        if (number_error == MyNumberError.TooFour) {
+        else {
             std.debug.print("=4. ", .{});
         }
     }

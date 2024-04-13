@@ -1,6 +1,6 @@
 //
 // Grouping values in structs is not merely convenient. It also allows
-// us to treat the values as a single item when storing them, passing
+// us to treat the values as a single item (entity) when storing them, passing
 // them to functions, etc.
 //
 // This exercise demonstrates how we can store structs in an array and
@@ -42,6 +42,14 @@ pub fn main() void {
     //
     // Feel free to run this program without adding Zump. What does
     // it do and why?
+    // --> It returns garbage numbers for the struct's properties because it was initialized as "undefined" (similar to np.empty())
+
+    chars[1] = Character{
+        .role = Role.bard,
+        .gold = 10,
+        .health = 100,
+        .experience = 20
+};
 
     // Printing all RPG characters in a loop:
     for (chars, 0..) |c, num| {

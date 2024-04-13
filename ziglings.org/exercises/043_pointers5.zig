@@ -49,7 +49,7 @@ const Character = struct {
 
     // I need to use the '?' here to allow for a null value. But
     // I don't explain it until later. Please don't tell anyone.
-    mentor: ?*Character = null,
+    mentor: ?*Character = null, // optional pointer value
 };
 
 pub fn main() void {
@@ -68,7 +68,7 @@ pub fn main() void {
 
     // FIX ME!
     // Please pass Glorp to printCharacter():
-    printCharacter(???);
+    printCharacter(&glorp);
 }
 
 // Note how this function's "c" parameter is a pointer to a Character struct.
@@ -85,7 +85,7 @@ fn printCharacter(c: *Character) void {
 
     std.debug.print("{s} (G:{} H:{} XP:{})\n", .{
         class_name,
-        c.gold,
+        c.gold, // implicitly dereferences then accesses the property's value
         c.health,
         c.experience,
     });

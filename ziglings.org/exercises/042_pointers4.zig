@@ -4,7 +4,7 @@
 //
 // Why would we wish to pass a pointer to an integer variable
 // rather than the integer value itself? Because then we are
-// allowed to *change* the value of the variable!
+// allowed to *change* the value of the variable (in-place)!
 //
 //     +-----------------------------------------------+
 //     | Pass by reference when you want to change the |
@@ -37,5 +37,5 @@ pub fn main() void {
 // This function should take a reference to a u8 value and set it
 // to 5.
 fn makeFive(x: *u8) void {
-    ??? = 5; // fix me!
+    x.* = 5; // fix me!
 }

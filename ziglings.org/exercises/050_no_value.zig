@@ -42,7 +42,7 @@
 //       var foo: void = {};
 //
 //       "void" is a _type_, not a value. It is the most popular of the
-//       Zero Bit Types (those types which take up absolutely no space
+//       Zero Bit Types; those types which take up absolutely no space
 //       and have only a semantic value. When compiled to executable
 //       code, zero bit types generate no code at all. The above example
 //       shows a variable foo of type void which is assigned the value
@@ -58,17 +58,17 @@
 //   * void      - there will NEVER be a value stored here
 //
 // Please use the correct "no value" for each ??? to make this program
-// print out a cursed quote from the Necronomicon. ...If you dare.
+// print out a ... quote from the Necronomicon. ...If you dare.
 //
 const std = @import("std");
 
-const Err = error{Cthulhu};
+const Err = error{monster};
 
 pub fn main() void {
-    var first_line1: *const [16]u8 = ???;
+    var first_line1: *const [16]u8 = undefined;
     first_line1 = "That is not dead";
 
-    var first_line2: Err!*const [21]u8 = ???;
+    var first_line2: Err!*const [21]u8 = Err.monster;
     first_line2 = "which can eternal lie";
 
     // Note we need the "{!s}" format for the error union string.
@@ -77,8 +77,8 @@ pub fn main() void {
     printSecondLine();
 }
 
-fn printSecondLine() ??? {
-    var second_line2: ?*const [18]u8 = ???;
+fn printSecondLine() void {
+    var second_line2: ?*const [18]u8 = null;
     second_line2 = "even death may die";
 
     std.debug.print("And with strange aeons {s}.\n", .{second_line2.?});

@@ -15,8 +15,8 @@
 //
 // Is equivalent to this if/else:
 //
-//     if (players == 1) startOnePlayerGame();
-//     else if (players == 2) startTwoPlayerGame();
+//     if (players == 1) startOnePlayerGame()
+//     else if (players == 2) startTwoPlayerGame()
 //     else {
 //         alert();
 //         return GameError.TooManyPlayers;
@@ -46,6 +46,7 @@ pub fn main() void {
             // match for every possible value).  Please add an "else"
             // to this switch to print a question mark "?" when c is
             // not one of the existing matches.
+            else => std.debug.print("?", .{ })
         }
     }
 

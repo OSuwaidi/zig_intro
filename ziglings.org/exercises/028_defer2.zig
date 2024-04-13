@@ -18,7 +18,7 @@ pub fn main() void {
 fn printAnimal(animal: u8) void {
     std.debug.print("(", .{});
 
-    std.debug.print(") ", .{}); // <---- how?!
+    defer std.debug.print(") ", .{}); // the "defered" block or statement will be executed on scope exit, whether normally or due to an error
 
     if (animal == 'g') {
         std.debug.print("Goat", .{});

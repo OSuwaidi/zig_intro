@@ -11,9 +11,8 @@
 //
 //     var digits = [10]u8{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 //
-// Thankfully, Zig has slices, which let you dynamically point to a
-// start item and provide a length. Here are slices of our digit
-// array:
+// Thankfully, Zig has slices which lets you dynamically point to a start item and provide a
+// length (pointer to the first element of an array with length). Here are slices of our digit array:
 //
 //     const foo = digits[0..1];  // 0
 //     const bar = digits[3..9];  // 3 4 5 6 7 8
@@ -24,7 +23,8 @@
 // first item at x and the last item at y-1. You can leave the y
 // off to get "the rest of the items".
 //
-// The type of a slice on an array of u8 items is []u8.
+// The type of a slice on an array of u8 items is "[]u8",
+// and a slice *does not* own the memory it points to.
 //
 const std = @import("std");
 
@@ -32,8 +32,8 @@ pub fn main() void {
     var cards = [8]u8{ 'A', '4', 'K', '8', '5', '2', 'Q', 'J' };
 
     // Please put the first 4 cards in hand1 and the rest in hand2.
-    const hand1: []u8 = cards[???];
-    const hand2: []u8 = cards[???];
+    const hand1: []u8 = cards[0..4]; // if not for specifiying type: "[]u8", it would've been a pointer: "*[8]u8"!
+    const hand2: []u8 = cards[4..]; // slices are just "dynamicly sized" pointers
 
     std.debug.print("Hand1: ", .{});
     printHand(hand1);
@@ -43,7 +43,7 @@ pub fn main() void {
 }
 
 // Please lend this function a hand. A u8 slice hand, that is.
-fn printHand(hand: ???) void {
+fn printHand(hand: []u8) void {
     for (hand) |h| {
         std.debug.print("{u} ", .{h});
     }
