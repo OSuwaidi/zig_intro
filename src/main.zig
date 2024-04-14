@@ -2,10 +2,19 @@
 
 // All *statements* in Zig must end with a semicolon ";"!
 
+// There are no "string" types in Zig, instead, they're represented as an array of bytes: "[_]u8" (array of characters)
+
 // Naming convention in Zig:
-// Variables and constants are snake_case
-// Functions and methods are camelCase (the first letter of every word after the first word is capitalized)
-// Types, structs, and functions that return a type or struct are PascalCase
+// Variables and constants are "snake_case"
+// Functions and methods are "camelCase" (the first letter of every word after the first word is capitalized)
+// Types, structs, and functions that return a type or struct are "PascalCase"
+
+// To import an *exported* Zig function from Python or C run: "zig build-lib file_name.zig -dynamic -fPIC -O ReleaseFast -femit-bin=library_name.so"
+// "-fPIC" == Position Independent Code: implies that the generated machine code is independent on being loaded on a specific memory address (OS can load the library at any address in memory)
+// "-dynamic" --> allows the compiled code (.so) to be loaded into different address spaces and share its executable code between multiple running applications, enhancing memory and loading times
+// If you omit "-dynamic", you generate a static library (.a) --> all the code from different libraries is included directly into the final executable (linked into the application at compile-time).
+// Hence, the resulting executable is larger in size (because all necessary library code is included directly in the app's binary), but it can lead to faster
+// runtine performance, as there are no lookup costs associated with dynamic linking. It also doesn't support being shared across multiple applications (each will have its own copy)
 
 // "{ }" are called block scopes that define the scope of a function, method, struct, etc.
 
@@ -17,7 +26,6 @@ const stdout = std.io.getStdOut().writer();
 const assert = @import("std").debug.assert;
 
 // "export" makes the function accessible from outside the compiled binary (with C linkage)
-// To import a Zig function from Python or C run: "zig build-lib file_name.zig -dynamic -O ReleaseFast -femit-bin=file_name.so"
 export fn add(a: i32, b: i32) i32 {
     return a + b;
 }
@@ -64,7 +72,7 @@ pub fn main() !void {
     print("The fixed size fixed_str is: {s}\nand the variable size var_str is: {s}\n\n", .{ fixed_str, grow_str });
 
     //characters:
-    const some_char = 'A'; // of type u8 (a byte)
+    const some_char = 'A'; // denoted by single quotation marks: of type "u8" (a byte)
     print("some_char without any format specifier: {}\n", .{some_char}); // by default, it prints its Unicode encoding (65 in this case)
     print("some_char with \"u\" format specifier: {u}\n\n", .{some_char}); // "u" is for unicode character while "c" is for ASCII character
 
@@ -135,14 +143,15 @@ pub fn main() !void {
         const fish = "salmon";
         _ = fish; // variable must be used somehow...
     }
-    // print("where is fish: {}\n", .{fish}); -->  error: use of undeclared identifier 'fish'
+    // print("where is fish? {}\n", .{fish}); -->  error: use of undeclared identifier 'fish'
 
     // example 2:
-    for (0..3) |_| {
+    for (numbers, 0..) |_, i| { // you can create a loop variable "i" that enumerates the looped over iterable
         const fish = "salmon";
+        _ = i;
         _ = fish;
     }
-    // print("where is fish: {}\n", .{fish}); -->  error: use of undeclared identifier 'fish'
+    // print("where is fish? {}\n", .{fish}); -->  error: use of undeclared identifier 'fish'
 }
 
 // By default, arguments are passed by into functions by *value*, meaning a *copy* of each argument is created when it's passed into a function

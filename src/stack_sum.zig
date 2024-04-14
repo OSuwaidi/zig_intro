@@ -25,7 +25,7 @@ pub fn main() !void {
     while (try std.io.getStdIn().reader().readUntilDelimiterOrEof(&input_buffer, '\n')) |user_input| { // here, we're actually unwrapping (.?) the reader object as value "user_input"
         const trimmed_string: []const u8 = std.mem.trim(u8, user_input, " ");
 
-        if (std.mem.eql(u8, trimmed_string, "b")) {
+        if (std.mem.eql(u8, trimmed_string, "q")) {
             print("Existing program...\n\n", .{});
             break;
         }

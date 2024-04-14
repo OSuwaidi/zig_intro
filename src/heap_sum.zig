@@ -32,7 +32,7 @@ pub fn main() !void {
     while (try std.io.getStdIn().reader().readUntilDelimiterOrEofAlloc(logging_alloc.allocator(), '\n', std.math.pow(usize, 1024, 2))) |user_input| { // specify a maximum size
         const trimmed_string: []const u8 = std.mem.trim(u8, user_input, " ");
 
-        if (std.mem.eql(u8, trimmed_string, "b")) {
+        if (std.mem.eql(u8, trimmed_string, "q")) {
             print("Existing program...\n\n", .{});
             break;
         }
