@@ -28,10 +28,16 @@
   {
     "context": "Workspace",
     "bindings": {
-      "shift-f": "file_finder::Toggle",
+      "alt-tab": "file_finder::Toggle",
       "cmd-t": "workspace::ToggleBottomDock",
       "cmd-p": "command_palette::Toggle",
       "cmd-k": "zed::OpenKeymap"
+    }
+  },
+  {
+    "context": "ProjectPanel",
+    "bindings": {
+      "cmd-r": "project_panel::Rename"
     }
   }
 ]
