@@ -2,11 +2,12 @@ const std = @import("std");
 
 pub fn main() !void {
     const arr = [_]i32{ 1, 5, 8, 20, 28, 35, 99, 101, 205 };
-    std.debug.print("Enter a value to find: ", .{});
+    std.debug.print("Enter a number to find: ", .{});
 
-    var input_buffer: [1024]u8 = undefined;
-    const user_input = (try std.io.getStdIn().reader().readUntilDelimiterOrEof(&input_buffer, '\n')).?;
+    var input_buffer: [10]u8 = undefined; // can take up to 9 characters because an extra byte is needed for the null terminator string -> "\n" in Zig rahter than "\0"
+    const user_input = (try std.io.getStdIn().reader().readUntilDelimiterOrEof(&input_buffer, '\n')).?; // returns a slice of "input_buffer", truncating at "delimiter"
     const trimmed_input = std.mem.trim(u8, user_input, " ");
+
     const target = std.fmt.parseInt(i32, trimmed_input, 10) catch |err| {
         std.debug.print("Invalid number: \"{s}\", with error: {}\n", .{ trimmed_input, err });
         return;

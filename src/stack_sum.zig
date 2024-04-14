@@ -19,10 +19,10 @@ fn sumNums(iterator: anytype) !f32 {
 
 pub fn main() !void {
     print("Enter numbers separated by whitespaces:\n", .{});
-    var input_buffer: [1024]u8 = undefined; // stack pre-allocate 1028 bytes to store user input
+    var input_buffer: [1024]u8 = undefined; // stack pre-allocate 1028 bytes to store user's input
 
     // Continously read and parse user input:
-    while (try std.io.getStdIn().reader().readUntilDelimiterOrEof(&input_buffer, '\n')) |user_input| { // here, we're actually unwrapping (.?) the reader object as value "user_input"
+    while (try std.io.getStdIn().reader().readUntilDelimiterOrEof(&input_buffer, '\n')) |user_input| { // here, we're actually unpacking (.?) the reader object as value "user_input"
         const trimmed_string: []const u8 = std.mem.trim(u8, user_input, " ");
 
         if (std.mem.eql(u8, trimmed_string, "q")) {
