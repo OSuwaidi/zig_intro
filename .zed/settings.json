@@ -7,7 +7,7 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
-  "theme": "Atelier Cave Dark",
+  "theme": "Atelier Seaside Dark",
   "ui_font_size": 16,
   "buffer_font_size": 13.5,
   "preferred_line_length": 200,
