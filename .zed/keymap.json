@@ -31,13 +31,20 @@
       "alt-tab": "file_finder::Toggle",
       "cmd-t": "workspace::ToggleBottomDock",
       "cmd-p": "command_palette::Toggle",
-      "cmd-k": "zed::OpenKeymap"
+      "cmd-k": "zed::OpenKeymap",
+      "cmd-r": null
     }
   },
   {
     "context": "ProjectPanel",
     "bindings": {
       "cmd-r": "project_panel::Rename"
+    }
+  },
+  {
+    "context": "ProjectSearchBar",
+    "bindings": {
+      "cmd-r": "search::ToggleReplace"
     }
   }
 ]

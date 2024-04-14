@@ -8,11 +8,11 @@
 // from the command palette or from `Zed` application menu.
 {
   "theme": "Atelier Dune Dark",
-  "ui_font_size": 16,
+  "ui_font_size": 14,
   "buffer_font_size": 13.5,
   "preferred_line_length": 200,
   "use_autoclose": true,
-  "base_keymap": "VSCode",
+  "base_keymap": "JetBrains",
   "extend_comment_on_newline": false,
   "confirm_quit": true,
   "autosave": "on_focus_change",
