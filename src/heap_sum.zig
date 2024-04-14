@@ -23,7 +23,7 @@ pub fn main() !void {
     // It reserves a big chunk of memory in *contiguous blocks* upfront, then parcels out smaller, variable-sized pieces of memory via "bump" allocation *as requested*
     // Once the arena allocator is destroyed or freed (at scope exist), *all* of the allocated memory is automatically freed; no individual memory deallocation!
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator); // the arena allocator allocates a contiguous chunk of 8 bytes (64 bits) initially by default
-    defer print("Arena allocator's result: {}\n", .{arena.deinit()}); // print status and free up the entirety of the allocated memory at the end (exit) of this scope
+    defer print("Arena allocator's result: {}\n", .{arena.deinit()}); // print status and clean up all memory allocated through the arena at the end (exit) of this scope
 
     // The logging Allocator logs all memory allocations (and their sizes), shrinks, expansions, and frees
     var logging_alloc = std.heap.loggingAllocator(arena.allocator()); // the ".allocator()" method returns an "mem.Allocator" object
