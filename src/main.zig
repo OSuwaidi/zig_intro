@@ -9,14 +9,20 @@
 // Functions and methods are "camelCase" (the first letter of every word after the first word is capitalized)
 // Types, structs, and functions that return a type or struct are "PascalCase"
 
+// When dealing with Zig's constant types, the constant type is always the type that is prefixed the "const" keyword, not after!
+// Examples:
+// "*const <struct>" --> a constant pointer to a <struct> type ==> the <struct>'s field themselves could change, but the pointer canno't change what it's pointing at!
+// "[]const u8" --> a slice consisting of constant data elements of type u8
+// "*const []const u8" --> a constant pointer to a slice of constant elements
+
+// "{ }" are called block scopes that define the scope of a function, method, struct, etc.
+
 // To import an *exported* Zig function from Python or C run: "zig build-lib file_name.zig -dynamic -fPIC -O ReleaseFast -femit-bin=library_name.so"
 // "-fPIC" == Position Independent Code: implies that the generated machine code is independent on being loaded on a specific memory address (OS can load the library at any address in memory)
 // "-dynamic" --> allows the compiled code (.so) to be loaded into different address spaces and share its executable code between multiple running applications, enhancing memory and loading times
 // If you omit "-dynamic", you generate a static library (.a) --> all the code from different libraries is included directly into the final executable (linked into the application at compile-time).
 // Hence, the resulting executable is larger in size (because all necessary library code is included directly in the app's binary), but it can lead to faster
 // runtine performance, as there are no lookup costs associated with dynamic linking. It also doesn't support being shared across multiple applications (each will have its own copy)
-
-// "{ }" are called block scopes that define the scope of a function, method, struct, etc.
 
 // Top-level declarations are order-independent:
 const os = std.os;
@@ -67,9 +73,16 @@ pub fn main() !void {
     print("and operation = {}\nor operation = {}\n\n", .{ not_true and is_true, not_true or is_true });
 
     // strings:
-    const fixed_str = "Hello World"; // returns a pointer to a constant: "*const [11:0]u8", *fixed* array of bytes
-    const grow_str: []const u8 = "Hello Variable"; // a slice; a view (pointer) into a section of an array, here, it's a string of *variable* length
-    print("The fixed size fixed_str is: {s}\nand the variable size var_str is: {s}\n\n", .{ fixed_str, grow_str });
+    var fixed_str = "Hello World"; // a string literal: is a *constant* pointer to a *constant* array of bytes: "*const [11:0]u8"
+    var grow_str: []const u8 = "Hello Variable"; // a slice; a view (pointer) into a section of an array, here, it's a string of *variable* length
+
+    // fixed_str = "New World"; --> this will error, because while the variable name "fixed_str" is mutable, its content (type) is *NOT*; it's a fixed (constant) size array!
+    // Hence, newely assigned string must be exactly of the same size (same number of bytes):
+    fixed_str = "Okay World?";
+    grow_str = "Nice"; // since this is a slice (of dynamic length), it can take up any string value
+    // grow_str[0] = 'H'; --> this will error, because although the slice (pointer) is mutable, its contents (bytes) are not!
+
+    print("fixed_str is: {s}\ngrow_str is: {s}\n\n", .{ fixed_str, grow_str });
 
     //characters:
     const some_char = 'A'; // denoted by single quotation marks: of type "u8" (a byte)
