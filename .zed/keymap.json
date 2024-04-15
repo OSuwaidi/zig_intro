@@ -32,7 +32,8 @@
       "cmd-t": "workspace::ToggleBottomDock",
       "cmd-p": "command_palette::Toggle",
       "cmd-k": "zed::OpenKeymap",
-      "cmd-r": null
+      "cmd-r": null,
+      "cmd-b": null
     }
   },
   {

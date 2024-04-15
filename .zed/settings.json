@@ -11,6 +11,7 @@
   "ui_font_size": 14,
   "buffer_font_size": 13.5,
   "preferred_line_length": 200,
+  "show_whitespaces": "none",
   "use_autoclose": true,
   "base_keymap": "JetBrains",
   "extend_comment_on_newline": false,
