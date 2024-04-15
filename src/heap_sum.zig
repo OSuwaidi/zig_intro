@@ -9,7 +9,7 @@ fn sumNums(iterator: anytype) !f32 {
     // The ".next()" method of the iterator ***modifies (mutates)*** the internal state of the iterator to advance it to the next element, hence, it has to be "var"!
     while (iterator.next()) |number| {
         sum += std.fmt.parseFloat(f32, number) catch |err| {
-            print("Invalid number: \"{s}\", with error: {}\n", .{ number, err });
+            print("Failed to parse number: \"{s}\", with error: {!}\n", .{ number, err });
             continue;
         };
     }
@@ -25,15 +25,19 @@ pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator); // the arena allocator allocates a contiguous chunk of 8 bytes (64 bits) initially by default
     defer print("Arena allocator's result: {}\n", .{arena.deinit()}); // print status and clean up all memory allocated through the arena at the end (exit) of this scope
 
-    // The logging Allocator logs all memory allocations (and their sizes), shrinks, expansions, and frees
-    var logging_alloc = std.heap.loggingAllocator(arena.allocator()); // the ".allocator()" method returns an "mem.Allocator" object
+    // The logging Allocator logs all memory allocations (and their sizes), expansions, shrinks, and frees
+    var logging_alloc = std.heap.loggingAllocator(arena.allocator()); // the ".allocator()" method returns an "mem.Allocator" interface type
 
     // Continously read and parse user input:
-    while (try std.io.getStdIn().reader().readUntilDelimiterOrEofAlloc(logging_alloc.allocator(), '\n', std.math.pow(usize, 1024, 2))) |user_input| { // specify a maximum size
-        const trimmed_string: []const u8 = std.mem.trim(u8, user_input, " ");
+    while (true) {
+        var array = std.ArrayList(u8).init(logging_alloc.allocator()); // has ".items", ".capacity", and ".allocator" fields
+
+        try std.io.getStdIn().reader().streamUntilDelimiter(array.writer(), '\n', null); // last argument specifies maximum read size (unbounded)
+
+        const trimmed_string: []const u8 = std.mem.trim(u8, array.items, " "); // ".items" is a *growable* slice: "[]u8"
 
         if (std.mem.eql(u8, trimmed_string, "q")) {
-            print("Existing program...\n\n", .{});
+            print("Existing program...\n", .{});
             break;
         }
 

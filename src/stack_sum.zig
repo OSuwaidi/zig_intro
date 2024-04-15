@@ -9,7 +9,7 @@ fn sumNums(iterator: anytype) !f32 {
     // The ".next()" method of the iterator ***modifies (mutates)*** the internal state of the iterator to advance it to the next element, hence, it has to be "var"!
     while (iterator.next()) |number| {
         sum += std.fmt.parseFloat(f32, number) catch |err| {
-            print("Invalid number: \"{s}\", with error: {}\n", .{ number, err });
+            print("Failed to parse number: \"{s}\", with error: {!}\n", .{ number, err });
             continue;
         };
     }
@@ -19,11 +19,16 @@ fn sumNums(iterator: anytype) !f32 {
 
 pub fn main() !void {
     print("Enter numbers separated by whitespaces:\n", .{});
-    var input_buffer: [1024]u8 = undefined; // stack pre-allocate 1028 bytes to store user's input
+    // Pre-allocate on the stack 1028 bytes to store user's input:
+    // var input_buffer: [1024]u8 = undefined;
 
     // Continously read and parse user input:
-    while (try std.io.getStdIn().reader().readUntilDelimiterOrEof(&input_buffer, '\n')) |user_input| { // here, we're actually unpacking (.?) the reader object as value "user_input"
-        const trimmed_string: []const u8 = std.mem.trim(u8, user_input, " ");
+    while (true) {
+        // Pre-allocate (initialized as zeros) on the stack 1028 bytes to store user's input:
+        var buffer: std.BoundedArray(u8, std.math.pow(usize, 32, 2)) = .{}; // contains ".buffer" and ".len" fields
+
+        try std.io.getStdIn().reader().streamUntilDelimiter(buffer.writer(), '\n', 1024);
+        const trimmed_string: []const u8 = std.mem.trim(u8, buffer.slice(), " "); // ".slice()" returns a truncated (up to delimiter) view of buffer
 
         if (std.mem.eql(u8, trimmed_string, "q")) {
             print("Existing program...\n\n", .{});
