@@ -9,11 +9,11 @@
 // Functions and methods are "camelCase" (the first letter of every word after the first word is capitalized)
 // Types, structs, and functions that return a type or struct are "PascalCase"
 
-// When dealing with Zig's constant types, the constant type is always the type that is prefixed the "const" keyword, not after!
+// When dealing with Zig types that contain a "const", the constant type is always the type that comes after the "const" keyword, not before!
 // Examples:
-// "*const <struct>" --> a constant pointer to a <struct> type ==> the <struct>'s field themselves could change, but the pointer canno't change what it's pointing at!
-// "[]const u8" --> a slice consisting of constant data elements of type u8
-// "*const []const u8" --> a constant pointer to a slice of constant elements
+// "*const <struct>" --> a pointer to an immutable <struct> type ==> the <struct>'s field are constant, regardless whether or not the pointer was declared as "const" or "var"!
+// "[]const u8" --> a (mutable) slice consisting of constant data elements of type u8
+// "*const []const u8" --> a pointer to an immutable (constant) slice of constant elements
 
 // "{ }" are called block scopes that define the scope of a function, method, struct, etc.
 

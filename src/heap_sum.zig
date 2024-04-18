@@ -30,6 +30,7 @@ pub fn main() !void {
 
     // Continously read and parse user input:
     while (true) {
+        // The "ArrayList" struct borrows memory from the specified allocator but will internally manage that memory independently (it internally stores a "std.mem.Allocator")
         var array = std.ArrayList(u8).init(logging_alloc.allocator()); // has ".items", ".capacity", and ".allocator" fields
         defer array.deinit(); // will deallocate the array's memory at the end of each iteration
 
