@@ -9,8 +9,8 @@
 # Zig related stuff:
 build.zig
 zig-*
-# Ignore everything in the zilglings directory:
-ziglings.org/
-# But do not ignore the "exercises" sub-folder:
-!ziglings.org/exercises
+# Ignore everything (files and directories) in the zilglings directory, but NOT the directory itself:
+ziglings.org/*
+# Do not ignore the "exercises" sub-folder:
+!ziglings.org/exercises/
 test*.zig
