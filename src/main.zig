@@ -41,6 +41,7 @@ fn modulo(a: u32, b: u32) u32 {
     return a % b;
 }
 
+// "comptime" argument(s) must be determinable during code compilation ("comptime var" or "const"), hence they cannot be declared as "var" because that would imply they're runtime-known arguments
 fn printHeader(comptime topic: []const u8) void {
     var buffer: [30]u8 = undefined; // after writing into "buffer" via ".upperString()", it will still contain the additional empty (undefined) characters if string is less than buffer size
     const header = std.ascii.upperString(&buffer, "#" ** 5 ++ " " ++ topic ++ " " ++ "#" ** 5); // truncated version of "buffer" according to string's length
