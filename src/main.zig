@@ -41,6 +41,12 @@ fn modulo(a: u32, b: u32) u32 {
     return a % b;
 }
 
+fn printHeader(comptime topic: []const u8) void {
+    var buffer: [30]u8 = undefined; // after writing into "buffer" via ".upperString()", it will still contain the additional empty (undefined) characters if string is less than buffer size
+    const header = std.ascii.upperString(&buffer, "#" ** 5 ++ " " ++ topic ++ " " ++ "#" ** 5); // truncated version of "buffer" according to string's length
+    print("{s}\n", .{header});
+}
+
 // "pub" makes the function accessible from other files within the same project
 // "void" implies that the function will not return anything. However, if it's prefixed with a "!", that means it might return an error
 pub fn main() !void {
@@ -54,6 +60,7 @@ pub fn main() !void {
 
     // Defining varibles
     // constant numerics:
+    printHeader("numerics");
     const x: i32 = 1;
     const y: f32 = 5.0;
     const result: i32 = add(x, y); // the constant "y" is going to be mapped to "i32" automatically inside the function "add()"
@@ -67,12 +74,14 @@ pub fn main() !void {
     print("{} modulo {} is {}\n\n", .{ p, q, modulo(p, q) });
 
     // boolean:
+    printHeader("boolean");
     const not_true: bool = !true;
     const is_true = true;
     print("not_true value: {}\n", .{not_true});
     print("and operation = {}\nor operation = {}\n\n", .{ not_true and is_true, not_true or is_true });
 
     // strings:
+    printHeader("strings");
     var fixed_str = "Hello World"; // a string literal: is a *constant* pointer to a *constant* array of bytes: "*const [11:0]u8"
     var grow_str: []const u8 = "Hello Variable"; // a slice; a view (pointer) into a section of an array, here, it's a string of *variable* length
 
@@ -84,8 +93,9 @@ pub fn main() !void {
 
     print("fixed_str is: {s}\ngrow_str is: {s}\n\n", .{ fixed_str, grow_str });
 
-    //characters:
-    const some_char = 'A'; // denoted by single quotation marks: of type "u8" (a byte)
+    // characters:
+    printHeader("characters");
+    const some_char = 'A'; // denoted by single quotation marks of type: "u8" (a byte)
     print("some_char without any format specifier: {}\n", .{some_char}); // by default, it prints its Unicode encoding (65 in this case)
     print("some_char with \"u\" format specifier: {u}\n\n", .{some_char}); // "u" is for unicode character while "c" is for ASCII character
 
@@ -94,16 +104,27 @@ pub fn main() !void {
     print("byte_array is now: {s}\n\n", .{byte_array});
 
     // optional:
-    var optional_var: ?[]const u8 = null; // prefixing the data type with a "?" implies it's an optional value (type union null)
-    assert(optional_var == null);
-    print("optional_var 1 holds: {any}\nand is of type: {}\n\n", .{ optional_var, @TypeOf(optional_var) });
+    printHeader("optional");
+    var optional_slice: ?[]const u8 = null; // prefixing the data type with a "?" implies it's an optional value (type union null)
+    assert(optional_slice == null);
+    print("optional_var holds: {any}\nand is of type: {}\n\n", .{ optional_slice, @TypeOf(optional_slice) });
 
-    optional_var = "hi";
-    assert(optional_var != null);
-    // ".?" is the *unpacking* operator which unpacks an optional type and will panic if the unpacked value is null!
-    print("optional_var 2 holds: {?s}\nand is of type: {}, but type {} when unpacked.\n\n", .{ optional_var, @TypeOf(optional_var), @TypeOf(optional_var.?) });
+    optional_slice = "hi";
+    assert(optional_slice != null);
+    // ".?" is the *unwrapping* operator which unwraps an optional type and will panic if the unwraped value is null!
+    print("optional_var now holds: {?s}\nand is of type: {}, but type {} when unwraped.\n\n", .{ optional_slice, @TypeOf(optional_slice), @TypeOf(optional_slice.?) });
+
+    const optimal_arr = [_]?u8{null} ** 3; // an optinal array of "u8"s
+
+    // optional value unwrapping:
+    if (optimal_arr[0]) |value| {
+        print("This value exists! {d}\n", .{value});
+    } else {
+        print("Value doesn't exist :(\n\n", .{});
+    }
 
     // error union:
+    printHeader("error union");
     var number_of_error: anyerror!i32 = error.ArgNotFound;
     print("error 1\nvalue: {!}\ntype: {}\n\n", .{ number_of_error, @TypeOf(number_of_error) });
 
@@ -111,6 +132,7 @@ pub fn main() !void {
     print("error 2\nvalue: {!}\ntype: {}\n\n", .{ number_of_error, @TypeOf(number_of_error) });
 
     // pointers:
+    printHeader("pointers");
     var some_int: i32 = 100;
     const ptr = &some_int; // returns the address of the variable which in this case is of type "*i32"
     print("The address of some_int in memory is: {*},\nwith the pointer pointing to the value: {}\n\n", .{ ptr, ptr.* }); // dereference the pointer via ".*"
@@ -127,6 +149,7 @@ pub fn main() !void {
     print("After second function, values of float1 and float2 are now: {d}, {d}.\n", .{ float1, float2 });
 
     // "for" loops:
+    printHeader("\"for\" loops");
     var numbers = [_]u8{ 1, 2, 3 };
 
     // Capture elements by value (copy):
