@@ -19,7 +19,7 @@ pub fn main() !void {
     };
 
     if (binary_search(&arr, target)) |answer| {
-        std.debug.print("Target found at index: {}\n", .{answer});
+        std.debug.print("Target found at index: {d}\n", .{answer});
     } else {
         std.debug.print("Target not found!\n", .{});
     }

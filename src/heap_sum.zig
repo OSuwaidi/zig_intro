@@ -7,7 +7,7 @@ fn sumNums(iterator: anytype) !f32 {
     var sum: f32 = 0;
 
     // The ".next()" method of the iterator ***modifies (mutates)*** the internal state of the iterator to advance it to the next element, hence, it has to be "var"!
-    while (iterator.next()) |number| {
+    while (iterator.next()) |number| { // unwrap the optional value from "interator.next()"
         sum += std.fmt.parseFloat(f32, number) catch |err| {
             print("Failed to parse number: \"{s}\", with error: {!}\n", .{ number, err });
             continue;
