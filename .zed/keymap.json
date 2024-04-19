@@ -10,7 +10,8 @@
       "cmd-enter": "editor::ToggleCodeActions",
       "cmd-shift-f": "editor::Format",
       "cmd-r": "editor::Rename",
-      "cmd-d": "editor::FindAllReferences"
+      "cmd-d": "editor::FindAllReferences",
+      "cmd-b": "editor::GoToDefinition"
     }
   },
 
