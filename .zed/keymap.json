@@ -14,11 +14,11 @@
       "cmd-b": "editor::GoToDefinition"
     }
   },
-
   {
     "context": "Editor && mode == full",
     "bindings": {
-      "shift-enter": "editor::NewlineBelow"
+      "shift-enter": "editor::NewlineBelow",
+      "cmd-j": "editor::OpenExcerpts"
     }
   },
   {
@@ -33,6 +33,7 @@
       "cmd-t": "workspace::ToggleBottomDock",
       "cmd-p": "command_palette::Toggle",
       "cmd-k": "zed::OpenKeymap",
+      "cmd-j": null,
       "cmd-r": null,
       "cmd-b": null
     }
