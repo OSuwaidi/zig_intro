@@ -16,7 +16,7 @@
 //
 const std = @import("std");
 
-// Zig lets us write integers in hexadecimal format:
+// Zig lets us write integers in hexadecimal format (prefixed by "0x"):
 //
 //     0xf (is the value 15 in hex)
 //

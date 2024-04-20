@@ -76,7 +76,7 @@ fn printCharacter(c: *Character) void {
     // Here's something you haven't seen before: when switching an enum, you
     // don't have to write the full enum name. Zig understands that ".wizard"
     // means "Class.wizard" when we switch on a Class enum value:
-    const class_name = switch (c.class) {
+    const class_name = switch (c.class) { // implicitly dereferences then accesses the "class" field's value
         .wizard => "Wizard",
         .thief => "Thief",
         .bard => "Bard",
@@ -85,7 +85,7 @@ fn printCharacter(c: *Character) void {
 
     std.debug.print("{s} (G:{} H:{} XP:{})\n", .{
         class_name,
-        c.gold, // implicitly dereferences then accesses the property's value
+        c.gold,
         c.health,
         c.experience,
     });

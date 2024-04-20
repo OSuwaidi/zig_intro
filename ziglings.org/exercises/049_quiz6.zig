@@ -27,16 +27,17 @@ const Elephant = struct {
     // Your Elephant trunk methods go here!
     // ---------------------------------------------------
 
-    // Since we're not going to modify the struct's fields (only read them), no need to pass struct by reference in the beloew methods -> "self: Elephant".
+    // Since we're not going to modify the struct's fields (only read them), no need to pass struct by reference in the below methods, can pass by value (copy) -> "self: Elephant".
     // But this will create a copy of the struct each time it's called! So, if the struct was complex (big in size), this approach will be inefficient.
-    // Hence, pass by reference:
+    // Hence, pass by (mutable) reference:
     pub fn hasTrunk(self: *Elephant) bool {
         return (self.trunk != null);
-        }
+    }
 
-    pub fn getTrunk(self: *Elephant) *Elephant {
+    // pass by (immutable) reference:
+    pub fn getTrunk(self: *const Elephant) *Elephant { // we can also coerce the argument as a pointer to "const" (immutable) self since we don't need to modify it
         return self.trunk.?;
-        }
+    }
 
     // ---------------------------------------------------
 

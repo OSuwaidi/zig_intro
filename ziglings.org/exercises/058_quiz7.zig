@@ -44,17 +44,16 @@ const print = @import("std").debug.print;
 const TripError = error{ Unreachable, EatenByAGrue };
 
 // Let's start with the Places on the map. Each has a name and a
-// distance or difficulty of travel (as judged by the hermit).
-//
-// Note that we declare the places as mutable (var) because we need to
-// assign the paths later. And why is that? Because paths contain
-// pointers to places and assigning them now would create a dependency
-// loop!
+// path from it to another place(s) with the distance recorded.
 const Place = struct {
     name: []const u8,
     paths: []const Path = undefined,
 };
 
+// Note that we declare the places as mutable (var) because we need to
+// assign the paths later. And why is that? Because paths contain
+// pointers to places and assigning them now would create a dependency
+// loop!
 var a = Place{ .name = "Archer's Point" };
 var b = Place{ .name = "Bridge" };
 var c = Place{ .name = "Cottage" };
@@ -89,12 +88,12 @@ var f = Place{ .name = "Fox Pond" };
 // places on the map. Note that we do not have to specify the type of
 // this value because we don't actually use it in our program once
 // it's compiled! (Don't worry if this doesn't make sense yet.)
-const place_count = 6;
+const place_count = 6; // "comptime" means don't store it (reserve memory) as a variable in binary, use it soley for *computation* downstream
 
 // Now let's create all of the paths between sites. A path goes from
 // one place to another and has a distance.
 const Path = struct {
-    from: *const Place,
+    from: *const Place, // coerces the pointer to mutable struct (*Place) into a pointer to immutable struct (*const Place)
     to: *const Place,
     dist: u8,
 };
@@ -179,7 +178,7 @@ const f_paths = [_]Path{
 
 // Once we've plotted the best course through the woods, we'll make a
 // "trip" out of it. A trip is a series of Places connected by Paths.
-// We use a TripItem union to allow both Places and Paths to be in the
+// We use a TripItem tagged union to allow both Places and Paths to be in the
 // same array.
 const TripItem = union(enum) {
     place: *const Place,
@@ -192,8 +191,8 @@ const TripItem = union(enum) {
             // Oops! The hermit forgot how to capture the union values
             // in a switch statement. Please capture both values as
             // 'p' so the print statements work!
-            .place => print("{s}", .{p.name}),
-            .path => print("--{}->", .{p.dist}),
+            .place => |p| print("{s}", .{p.name}),
+            .path => |p| print("--{}->", .{p.dist}),
         }
     }
 };
@@ -227,21 +226,19 @@ const HermitsNotebook = struct {
     // Remember the array repetition operator `**`? It is no mere
     // novelty, it's also a great way to assign multiple items in an
     // array without having to list them one by one. Here we use it to
-    // initialize an array with null values.
-    entries: [place_count]?NotebookEntry = .{null} ** place_count,
+    // initialize an optional array (with null values).
+    entries: [place_count]NotebookEntry = .{undefined} ** place_count,
 
     // The next entry keeps track of where we are in our "todo" list.
     next_entry: u8 = 0,
 
     // Mark the start of empty space in the notebook.
-    end_of_entries: u8 = 0,
+    end_of_entries: u8 = 0, // initialized as 0 since no entries yet
 
     // We'll often want to find an entry by Place. If one is not
     // found, we return null.
     fn getEntry(self: *HermitsNotebook, place: *const Place) ?*NotebookEntry {
-        for (&self.entries, 0..) |*entry, i| {
-            if (i >= self.end_of_entries) break;
-
+        for (0..self.end_of_entries) |i| {
             // Here's where the hermit got stuck. We need to return
             // an optional pointer to a NotebookEntry.
             //
@@ -255,7 +252,8 @@ const HermitsNotebook = struct {
             // dereference and optional value "unwrapping" look
             // together. Remember that you return the address with the
             // "&" operator.
-            if (place == entry.*.?.place) return entry;
+            // if (entry.*.?.place == place) return &(entry.*.?); --> answer for original quiz7 (without my modifications)
+            if (self.entries[i].place == place) return &(self.entries[i]);
             // Try to make your answer this long:__________;
         }
         return null;
@@ -273,25 +271,35 @@ const HermitsNotebook = struct {
     // distance) than the one we'd noted before. If it is, we
     // overwrite the old entry with the new one.
     fn checkNote(self: *HermitsNotebook, note: NotebookEntry) void {
-        const existing_entry = self.getEntry(note.place);
+        const entry = self.getEntry(note.place);
 
-        if (existing_entry == null) {
+        // var existing_entry = self.getEntry(note.place);
+        // if (existing_entry == null) {
+        //     self.entries[self.end_of_entries] = note;
+        //     self.end_of_entries += 1;
+        // } else if (note.dist_to_reach < existing_entry.?.dist_to_reach) {
+        //     existing_entry.?.* = note;
+        // }
+
+        if (entry) |existing_entry| {
+            if (note.dist_to_reach < existing_entry.dist_to_reach) {
+                existing_entry.* = note;
+            }
+        } else {
             self.entries[self.end_of_entries] = note;
             self.end_of_entries += 1;
-        } else if (note.dist_to_reach < existing_entry.?.dist_to_reach) {
-            existing_entry.?.* = note;
         }
     }
 
     // The next two methods allow us to use the notebook as a "todo"
     // list.
-    fn hasNextEntry(self: *HermitsNotebook) bool {
+    fn hasNextEntry(self: *const HermitsNotebook) bool {
         return self.next_entry < self.end_of_entries;
     }
 
     fn getNextEntry(self: *HermitsNotebook) *const NotebookEntry {
-        defer self.next_entry += 1; // Increment after getting entry
-        return &self.entries[self.next_entry].?;
+        defer self.next_entry += 1; // Increment *after* getting entry
+        return &self.entries[self.next_entry];
     }
 
     // After we've completed our search of the map, we'll have
@@ -302,14 +310,14 @@ const HermitsNotebook = struct {
     // is an array of TripItems with our trip in reverse order.
     //
     // We need to take the trip array as a parameter because we want
-    // the main() function to "own" the array memory. What do you
+    // the main() function to "own" the array's memory. What do you
     // suppose could happen if we allocated the array in this
     // function's stack frame (the space allocated for a function's
     // "local" data) and returned a pointer or slice to it?
     //
     // Looks like the hermit forgot something in the return value of
     // this function. What could that be?
-    fn getTripTo(self: *HermitsNotebook, trip: []?TripItem, dest: *Place) void {
+    fn getTripTo(self: *HermitsNotebook, trip: []?TripItem, dest: *const Place) !void {
         // We start at the destination entry.
         const destination_entry = self.getEntry(dest);
 
@@ -338,7 +346,7 @@ const HermitsNotebook = struct {
             // Otherwise, entries have a path.
             trip[i + 1] = TripItem{ .path = current_entry.via_path.? };
 
-            // Now we follow the entry we're "coming from".  If we
+            // Now we follow the entry we're "coming from". If we
             // aren't able to find the entry we're "coming from" by
             // Place, something has gone horribly wrong with our
             // program! (This really shouldn't ever happen. Have you
@@ -425,16 +433,17 @@ pub fn main() void {
 // The remaining space in the trip array will contain null values, so
 // we need to loop through the items in reverse, skipping nulls, until
 // we reach the destination at the front of the array.
-fn printTrip(trip: []?TripItem) void {
+fn printTrip(trips: []?TripItem) void {
     // We convert the usize length to a u8 with @intCast(), a
-    // builtin function just like @import().  We'll learn about
+    // builtin function just like @import(). We'll learn about
     // these properly in a later exercise.
-    var i: u8 = @intCast(trip.len);
+    var i: u8 = @intCast(trips.len);
 
     while (i > 0) {
         i -= 1;
-        if (trip[i] == null) continue;
-        trip[i].?.printMe();
+        if (trips[i]) |trip| { // "i" is coerced into a "usize" when used for indexing
+            trip.printMe();
+        }
     }
 
     print("\n", .{});

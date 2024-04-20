@@ -3,8 +3,8 @@
 // of the active field in our union, isn't it?
 //
 // Thankfully, Zig also has "tagged unions", which allow us to
-// store an enum value within our union representing which field
-// is active.
+// store an enum's value within our union representing which field
+// is active (allows us to link enums' values with their corresponding fields within a union).
 //
 //     const FooTag = enum{ small, medium, large };
 //
@@ -44,14 +44,14 @@ pub fn main() void {
     std.debug.print("Insect report! ", .{});
 
     // Could it really be as simple as just passing the union?
-    printInsect(???);
-    printInsect(???);
+    printInsect(ant);
+    printInsect(bee);
 
     std.debug.print("\n", .{});
 }
 
 fn printInsect(insect: Insect) void {
-    switch (???) {
+    switch (insect) { // the "Insect" union type acts as an enum!
         .still_alive => |a| std.debug.print("Ant alive is: {}. ", .{a}),
         .flowers_visited => |f| std.debug.print("Bee visited {} flowers. ", .{f}),
     }

@@ -25,10 +25,10 @@ const Ops = enum { inc, pow, dec };
 pub fn main() void {
     const operations = [_]Ops{
         Ops.inc,
-        Ops.inc,
+        .inc, // given the enum type ("Ops"), it's not necessary to prefix the values by their enum's name
         Ops.inc,
         Ops.pow,
-        Ops.dec,
+        .dec,
         Ops.dec,
     };
 

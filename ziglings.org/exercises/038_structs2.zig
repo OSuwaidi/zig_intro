@@ -44,12 +44,7 @@ pub fn main() void {
     // it do and why?
     // --> It returns garbage numbers for the struct's properties because it was initialized as "undefined" (similar to np.empty())
 
-    chars[1] = Character{
-        .role = Role.bard,
-        .gold = 10,
-        .health = 100,
-        .experience = 20
-};
+    chars[1] = Character{ .role = Role.bard, .gold = 10, .health = 100, .experience = 20 };
 
     // Printing all RPG characters in a loop:
     for (chars, 0..) |c, num| {

@@ -3,12 +3,19 @@
 //
 //     var foo: [4]u8 = [4]u8{ 1, 2, 3, 4 };
 //     var foo_slice: []u8 = foo[0..];
-//     var foo_ptr: [*]u8 = &foo;
+//     var foo_ptr: [*]u8 = &foo; --> a regular pointer here would require that the size of the array it points to be fixed: "*[4]u8"!
 //     var foo_slice_from_ptr: []u8 = foo_ptr[0..4];
 //
-// The difference between foo_slice and foo_ptr is that the slice has
+// The difference between "foo_slice" and "foo_ptr" is that the slice has
 // a known length. The pointer doesn't. It is up to YOU to keep track
-// of the number of u8s foo_ptr points to!
+// of the number of u8s "foo_ptr" points to (manual bound checking)!
+
+// *Note*:
+// The "[*]u8" type is a pointer to an array of unspecified number of u8 elements (unknown length),
+// while "*[]u8" is a pointer to a slice of mutable u8 elements.
+// Therefore, to access an element in a variable of type "*[]u8", you would need to deference
+// it twice (once for the pointer, and another for the slice [many-item pointer])!
+
 //
 const std = @import("std");
 
@@ -18,7 +25,7 @@ pub fn main() void {
     // revealed when we've learned some additional features):
     const zen12: *const [21]u8 = "Memory is a resource.";
     //
-    //   It would also have been valid to coerce to a slice:
+    //   It would also have been valid to coerce into a slice:
     //         const zen12: []const u8 = "...";
     //
     // Now let's turn this into a "many-item pointer":
@@ -33,7 +40,7 @@ pub fn main() void {
     // we can CONVERT IT TO A SLICE. (Hint: we do know the length!)
     //
     // Please fix this line so the print statement below can print it:
-    const zen12_string: []const u8 = zen_manyptr;
+    const zen12_string: []const u8 = zen_manyptr[0..21];
 
     // Here's the moment of truth!
     std.debug.print("{s}\n", .{zen12_string});
