@@ -43,7 +43,8 @@ fn modulo(a: u32, b: u32) u32 {
 
 // "comptime" argument(s) must be determinable during code compilation ("comptime var" or "const"), hence they cannot be declared as "var" because that would imply they're runtime-known arguments
 fn printHeader(comptime topic: []const u8) void {
-    var buffer: [30]u8 = undefined; // after writing into "buffer" via ".upperString()", it will still contain the additional empty (undefined) characters if string is less than buffer size
+    var buffer: [30]u8 = undefined;
+    // After writing into "buffer" via ".upperString()", "buffer" will still contain the additional empty (undefined) characters if written string is less than buffer size
     const header = std.ascii.upperString(&buffer, "#" ** 5 ++ " " ++ topic ++ " " ++ "#" ** 5); // truncated version of "buffer" according to string's length
     print("{s}\n", .{header});
 }
@@ -106,7 +107,7 @@ pub fn main() !void {
 
     // optional:
     printHeader("optional");
-    var optional_slice: ?[]const u8 = null; // prefixing the data type with a "?" implies it's an optional value (type union null)
+    var optional_slice: ?[]const u8 = null; // prefixing the data type with a "?" implies it's an optional value (type: null union)
     assert(optional_slice == null);
     print("optional_var holds: {any}\nand is of type: {}\n\n", .{ optional_slice, @TypeOf(optional_slice) });
 
