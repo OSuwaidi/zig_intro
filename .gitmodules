@@ -1,0 +1,3 @@
+[submodule "ziglings"]
+    path = ziglings
+    url = https://github.com/OSuwaidi/ziglings.git
