@@ -7,7 +7,7 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
-  "theme": "Atelier Dune Dark",
+  "theme": "XY-Zed",
   "ui_font_size": 14,
   "buffer_font_size": 13.5,
   "preferred_line_length": 200,
@@ -56,5 +56,12 @@
   "tabs": {
     // Show git status colors in the editor tabs.
     "git_status": true
+  },
+  "git": {
+    // Control whether the git blame information is shown inline,
+    // in the currently focused line.
+    "inline_blame": {
+      "enabled": false
+    }
   }
 }
